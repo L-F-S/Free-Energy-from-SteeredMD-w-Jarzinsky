@@ -8,8 +8,24 @@ Created on Fri Sep 14 11:25:34 2018
 
 ###############################################################################
 ##         ALGORITHM FOR CALCULATING THE FREE ENERGY                         ##
+           DIFFERENCE FROM A FOLDED TO AN UNFOLDED
+           STATE OF A PROTEIN USING JARZYNSKY EQUALITY
+           ON STEERED MOLECULAR DYNAMICS SIMULATIONS
+ 
+ For reference:
+    . Jarzynski, Christopher. "Nonequilibrium equality for free energy differences."
+    Physical Review Letters 78.14 (1997): 2690.
+    . Sanghyun Park, Fatemeh Khalili-Araghi, Emad Tajkhorshid, and Klaus Schulten.
+      "Free energy calculation from steered molecular dynamics simulations using jarzynski’s
+    equality." The Journal of chemical physics, 2003
 
+Requires as input, several steered molecular dynamics (SMD) simulations.
+calculates the work done for every simulation,
+then calcualtes free energy from the work, according to Jarzynsky's equality.
 
+Works with NAMD simulatiosn file outputs.
+
+------------------------------------------------------------------------------
 V 5.3 (tipo) : simulazioni fatte in modo diverso  calcolo del lavoro rifatto,
 ciclando su distanze incrementali.
 
@@ -59,9 +75,8 @@ v_angstrom_fsec = float(actual_v)/2
 n_simulations = 2 # not actually nsimulations, ma il numero che metot nel ciclo: 1001, 200, 200, 12
 
 # Useful folders:
-pdb_dir = "/home/lorenzo/home/lorenzo.signorini/tirocinio/dioporco/inputs/"
-logs_dir = "/home/lorenzo/home/lorenzo.signorini/tirocinio/dioporco/logs/"
-smd_dir = "/home/lorenzo.signorini/tirocinio/dioporco/out/"+speed
+pdb_dir = "/home/lorenzo/home/lorenzo.signorini/tirocinio/inputs/"
+smd_dir = "/home/lorenzo.signorini/tirocinio/out/"+speed
 ana_dir = "/home/lorenzo/tirocinio/whole-atom-sMD/analyses/nuove_nuove_simu/"+speed
 
 # set maximum distance at which to calculate work.
@@ -77,12 +92,12 @@ def main(load_works = False, load_deltaF = False):
    
     #0. Plot expected vs real distance vs time.
    
-#    plot_all_dist()
+    plot_all_dist() 
    
     #1. Calculate Work:
 
     if load_works == False:
-        W_with_d = calculate_all_works_with_matrix()  # todo: calcola lavoro con forza.
+        W_with_d = calculate_all_works_with_matrix() 
         save_work(W_with_d)          
     elif load_works == True:
         W_with_d = upload_work()
@@ -92,27 +107,28 @@ def main(load_works = False, load_deltaF = False):
     print( W_with_d.shape[1], "position steps.")
     total_work = W_with_d[max_dist].dropna()
     print(total_work)
-    # 1.5 WORK PLOTS
     
-#    plot_all_w_wrt_dist(W_with_d)
-#    histo(total_work)
-#    is_normal(total_work)
+    # 1.5 Work Plots
+    
+    plot_all_w_wrt_dist(W_with_d)
+    histo(total_work)
+    # is_normal(total_work) normality check
+    
     #2 calc free energy
     
-#    cumulant = use_cumulant(total_work)
-#
-#    if load_deltaF == False:
-#        cumulant = True
-#        DeltaF_of_dist = calc_free_energy(W_with_d, cumulant)
-##         save_DeltaF(DeltaF_of_dist, cumulant) todo: deltaf è una lista, non ha .to_csv
-#    elif load_deltaF == True:
-#        DeltaF_of_dist = upload_DeltaF(cumulant)
-#    
-#    print("FINAL ENERGY:", DeltaF_of_dist[-1])
-#
-#    # 2.5 DeltaF PLOTS
-#    
-#    DeltaF_plot(DeltaF_of_dist, sorted(W_with_d.columns), cumulant)
+    cumulant = use_cumulant(total_work)
+
+    if load_deltaF == False:
+        DeltaF_of_dist = calc_free_energy(W_with_d, cumulant)
+         save_DeltaF(DeltaF_of_dist, cumulant) todo: deltaf è una lista, non ha .to_csv
+    else:
+        DeltaF_of_dist = upload_DeltaF(cumulant)
+    
+    print("FINAL ENERGY:", DeltaF_of_dist[-1])
+
+    # 2.5 DeltaF PLOTS
+    
+    DeltaF_plot(DeltaF_of_dist, sorted(W_with_d.columns), cumulant)
     return #W_with_d,# DeltaF_of_dist
 
 """
@@ -121,16 +137,16 @@ def main(load_works = False, load_deltaF = False):
 #                        1. CALCULATE WORK                                    #
 ###############################################################################
 
-Calculates work applied on the system from t=o to t=finaltime
+Calculates work applied on the system from t=o to t=finaltime,
+by discretizing the integral of the original work
 
 w(0->finale)= k*v* sum_(i=0->i=t_finale){[(x_(i+1)-xi)-v*t_i]* valore della tstep}  
 (unità di misura: kcal/mol)
 
-dove xi è la distanza tra C_alpha N e C terminale al tempo i, e x0 al tempo 0   todo migliora sta scritta (nel calcolo 'normale' del lavoro)
+where xi is the distance between C_alpha N terminal and C_alpha C terminal
+at time i  
 
-todo: cambiare sta lista
-
-todo: add a different inegral dsicretization method? with trapezi? mapperchenno.
+todo: add description of trapezoid rulke discretization.
 """    
 
 def extract_quantity_inside_sommatoria(x_ser, line, dist_i_1, trapezio = False):
@@ -383,24 +399,6 @@ def plot_all_w_wrt_dist(W_with_d):
 ###############################################################################
 """
 
-# TODO: ui
-def user_input():
-    print("Hello! wellcome to this calculation of the difference in\n\
-          free energy from a folded state (at an end-to-end distance of "\
-           , dist_0,"to an unfolded state (at an end-to-end distance of ", max_dist,\
-           "from steered molecular dynamic simulation data of protein pulling\
-           at speed: ", speed,"\n+++++++++++++++++++++++++++++++++++++++++++++++++")
-
-    print()
-    verbose = True
-    load_works = False
-    
-    #load_deltaF = False
-
-    return
-
-
-
 def save_DeltaF(DeltaF, cumulant):
     os.chdir(ana_dir)
     if cumulant == True:
@@ -437,4 +435,5 @@ def upload_work():
     W_with_d.columns = list(range(dist_0, max_dist+1))
     return W_with_d
 
-main(load_works = False)
+# run program:
+main()
