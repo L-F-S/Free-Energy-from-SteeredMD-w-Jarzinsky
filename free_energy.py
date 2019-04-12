@@ -3,7 +3,7 @@
 """
 Created on Fri Sep 14 11:25:34 2018
 
-@author: lorenzo
+@author: Lorenzo Federico Signorini
 
 
 ###############################################################################
