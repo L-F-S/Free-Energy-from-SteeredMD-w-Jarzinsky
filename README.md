@@ -12,7 +12,7 @@ The theory behind the project is described in more detail [here](https://it.over
 │   ├── 
 │   ├── input_files/
 │   │  ├── aps.pdb
-│   │  ├──
+│   │  ├── aps.
 ├── Jarzinsky equality calculation
 │   ├── 
 ├── README.md
@@ -36,3 +36,4 @@ See [namd tutorial guide on steered molecular dynamics simulations](https://www.
 
 
 # 3. Plot what you like
+![](img/W_wrt_dist.png)
