@@ -1,4 +1,4 @@
-# Nonequilibrium Thermodynamic Integration by means of Steered Molecular Dynamics of Equus Caballus Acylophosphatase (1APS)
+# Nonequilibrium Thermodynamic Integration by means of Steered Molecular Dynamics of _Equus caballus_ Acylophosphatase (1APS)
 
 This repository contains scripts to calculate a free energy profile of [1APS](https://www.rcsb.org/structure/1APS "1APS pdb") between its native and denatured state, by applying Jarzynski's identity \cite{jarzynski1997nonequilibrium} to a dataset of steered molecular dynamics simulations, starting from a PDB file of the coordinates of the native state.
 The theory behind the project is described in more detail [here](https://it.overleaf.com/read/ygvjwnpbbrfk "Nonequilibrium Thermodynamic Integration by means of Steered Molecular Dynamics of Equus Caballus Acylophosphatase (1APS)").
