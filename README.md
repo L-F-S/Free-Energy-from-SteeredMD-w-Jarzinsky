@@ -16,11 +16,11 @@ Free energy calculation from a steered molecular dynamics simulaiton using Jarzy
   * [VMD](www.ks.uiuc.edu/Research/vmd), a molecular graphics program
   * [NAMD](www.ks.uiuc.edu/Research/namd), a molecular dynamics simulation program
   * Python 3
-1. # Run SMD simulations
+# 1. Run SMD simulations
 
 See [namd tutorial guide on steered molecular dynamics simulations](https://www.ks.uiuc.edu/Training/Tutorials/namd/namd-tutorial-unix-html/node16.html).
 
-  1. ## Input:
+## 1.1 Input:
 -[protein pdb](https://www.rcsb.org/structure/1APS "1APS pdb")
 -protein.psf file  
 ## Command:
