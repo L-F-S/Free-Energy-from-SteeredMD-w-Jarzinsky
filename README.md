@@ -2,6 +2,13 @@
 Free energy calculation from a steered molecular dynamics simulaiton using Jarzynsky equality of [1APS protein](https://www.rcsb.org/structure/1APS "1APS pdb").
 
 # Directories
+```bash
+├── steeredMDsimulations
+│   ├── 
+├── Jarzinsky equality calculation
+│   ├── 
+├── README.md
+```
 
 # 1. Run SMD simulations
 
